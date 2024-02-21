@@ -1,5 +1,5 @@
 /**
- * @typedef {Object} ButtonComponentProps
+ * @typedef {Object} BaseComponentProps
  * @property {Object} events
  * @property {Object} styles
  * @property {String} text
@@ -7,7 +7,7 @@
  */
 export default class BaseComponent extends HTMLElement {
     /**
-     * @type {Object} 
+     * @type {BaseComponentProps} 
      */
     props;
 
@@ -56,11 +56,13 @@ export default class BaseComponent extends HTMLElement {
         this.shadowRoot.appendChild(styleSheet);
         
         const type = this.baseType == "custom" ? "div" : this.baseType
-        this.baseElement = document.createElement(type);
+        this.shadowRoot.innerHTML = /* html */`
+            <${type} id="${this.props.id}">
+                <slot></slot>
+            </${type}>`;
+
         this.baseElement.id = this.props.id;
 
-        if (this.baseElement == "custom")
-            this.baseElement.innerHTML = this.props.template;
 
         this.shadowRoot.appendChild(this.baseElement);
         
